@@ -1,13 +1,196 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Moto Mars Mecânica</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
-</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head><style>
+@font-face {
+  font-family: "Optimistic";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/OptimisticAI_VF_Optimized.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Optimistic Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/OptimisticMono_W_TextRegular.woff2") format("woff2");
+}
+:where(html) {
+  font-family: "Optimistic", system-ui, sans-serif;
+}
+:where(code, pre, kbd, samp) {
+  font-family: "Optimistic Mono", ui-monospace, monospace;
+}
+</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#05060A">
+<title>LinguaVox — Tradutor Universal (Versao Comercial)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  :root { --bg: #05060A; --panel-bg: rgba(18, 20, 32, 0.7); --panel-border: rgba(255, 255, 255, 0.08); --text-main: #E2E8F0; --text-muted: #8B93B8; --cyan: #22D3EE; --violet: #A855F7; --accent: #4F7CFF; --success: #34D399; --error: #FB7185; --btn-bg: rgba(255, 255, 255, 0.05); --btn-hover: rgba(255, 255, 255, 0.1); }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background-color: var(--bg); color: var(--text-main); font-family: 'Inter', system-ui, sans-serif; min-height: 100vh; display: flex; justify-content: center; overflow-x: hidden; position: relative; }
+  body::before { content: ''; position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 100vw; height: 500px; background: radial-gradient(circle at center, rgba(79, 124, 255, 0.15) 0%, transparent 60%); z-index: 0; pointer-events: none; }
+  .app-container { width: 100%; max-width: 480px; padding: 24px 16px 40px; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 20px; }
+  .header { text-align: center; margin-bottom: 8px; }
+  .top-bar { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+  .badge { display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.1); color: #CBD5E1; font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; box-shadow: 0 4px 15px rgba(0,0,0,0.2); text-align: center; }
+  .ui-lang-select { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-main); border-radius: 999px; padding: 6px 10px; font-size: 11px; font-weight: 700; cursor: pointer; outline: none; }
+  .logo { font-size: 42px; font-weight: 800; background: linear-gradient(100deg, #7DD3FC, #818CF8 50%, #C084FC); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.03em; margin-bottom: 10px; }
+  .subtitle { color: var(--text-muted); font-size: 13px; line-height: 1.5; padding: 0 20px; text-align: center; margin: 0 auto; }
+  .lang-bar { display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; align-items: center; }
+  .lang-btn { display: flex; align-items: center; gap: 8px; background: var(--panel-bg); backdrop-filter: blur(10px); border: 1px solid var(--panel-border); padding: 14px 12px; border-radius: 18px; color: var(--text-main); font-size: 14px; font-weight: 600; cursor: pointer; width: 100%; justify-content: center; }
+  .swap-btn { width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, #4F7CFF, #A855F7); border: none; color: white; font-size: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .audio-settings { background: var(--panel-bg); border: 1px solid var(--panel-border); border-radius: 18px; padding: 16px; display: flex; flex-direction: column; gap: 16px; backdrop-filter: blur(10px); }
+  .profile-buttons { display: flex; gap: 8px; }
+  .profile-btn { flex: 1; background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 10px; border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+  .profile-btn.active { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.05); color: #fff; }
+  .speed-control { display: flex; align-items: center; gap: 12px; padding: 0 4px; }
+  .speed-control label { font-size: 12px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+  .speed-control span { color: var(--cyan); font-weight: 700; width: 36px; text-align: right; }
+  .repeat-control { display: flex; align-items: center; gap: 12px; padding: 0 4px; margin-top: 4px; }
+  .repeat-control label { font-size: 12px; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+  .repeat-select { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text-main); border-radius: 12px; padding: 8px 12px; font-size: 13px; font-weight: 600; outline: none; cursor: pointer; text-align: center; }
+  input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
+  input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 6px; cursor: pointer; background: rgba(255, 255, 255, 0.1); border-radius: 999px; }
+  input[type=range]::-webkit-slider-thumb { height: 18px; width: 18px; border-radius: 50%; background: #fff; cursor: pointer; -webkit-appearance: none; margin-top: -6px; }
+  .sel-container { position: relative; }
+  .dropdown { position: absolute; top: calc(100% + 8px); left: 0; width: 100%; max-height: 250px; overflow-y: auto; background: #121420; border: 1px solid var(--panel-border); border-radius: 18px; padding: 8px; z-index: 100; display: none; box-shadow: 0 15px 40px rgba(0,0,0,0.6); }
+  .dropdown.active { display: block; }
+  .dropdown-item { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 12px; cursor: pointer; font-size: 14px; color: var(--text-muted); }
+  .dropdown-item:hover { background: rgba(255,255,255,0.08); color: white; }
+  .dropdown-item.active { color: var(--accent); font-weight: 600; background: rgba(79, 124, 255, 0.1); }
+  .panel { background: var(--panel-bg); backdrop-filter: blur(16px); border: 1px solid var(--panel-border); border-radius: 24px; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+  .panel-header { display: flex; justify-content: space-between; align-items: center; }
+  .panel-label { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+  .label-origem { color: var(--cyan); } .label-traducao { color: #C084FC; }
+  .chip { font-size: 11px; font-weight: 600; color: var(--text-muted); background: rgba(255,255,255,0.05); padding: 5px 12px; border-radius: 999px; border: 1px solid var(--panel-border); }
+  textarea { width: 100%; min-height: 100px; background: transparent; border: none; color: var(--text-main); font-size: 17px; font-family: inherit; resize: none; outline: none; line-height: 1.5; }
+  .action-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .action-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .action-btn { background: var(--btn-bg); border: 1px solid var(--panel-border); padding: 12px; border-radius: 999px; color: var(--text-main); font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
+  .icon-svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+  .action-btn.listening { background: rgba(251, 113, 133, 0.15); border-color: rgba(251, 113, 133, 0.5); color: var(--error); }
+  .history-panel { display: none; background: rgba(0,0,0,0.3); border-radius: 16px; padding: 12px; margin-top: 4px; border: 1px solid var(--panel-border); }
+  .history-panel.active { display: block; }
+  .history-list { max-height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+  .history-item { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 10px; font-size: 12px; cursor: pointer; border-left: 2px solid var(--accent); display: flex; flex-direction: column; gap: 4px; }
+  .clear-hist-btn { width: 100%; background: rgba(251, 113, 133, 0.1); color: var(--error); border: 1px solid rgba(251, 113, 133, 0.3); padding: 10px; border-radius: 10px; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer; }
+  .panel-footer { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-top: 4px; opacity: 0.7; }
+  .main-btn { width: 100%; padding: 20px; border-radius: 20px; background: linear-gradient(100deg, #4F7CFF, #A855F7); border: none; color: white; font-size: 16px; font-weight: 800; letter-spacing: 0.05em; cursor: pointer; box-shadow: 0 10px 30px -5px rgba(168, 85, 247, 0.5); margin-top: 10px; }
+  .status-msg { text-align: center; font-size: 13px; font-weight: 600; color: var(--success); min-height: 20px; display: flex; align-items: center; justify-content: center; }
+  .status-msg.error { color: var(--error); }
+  .app-footer { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 4px; margin-top: 20px; font-size: 11px; color: #4B526D; }
+  .copyright { font-size: 10px; color: #3A4059; font-weight: 500; letter-spacing: 0.5px; }
+  .overlay { position: fixed; inset: 0; background: rgba(5, 6, 10, 0.85); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 1000; }
+  .overlay.active { display: flex; }
+  .overlay-content { background: #121420; border: 1px solid var(--panel-border); border-radius: 24px; padding: 30px 24px; width: 100%; max-width: 400px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="app-container">
+  <header class="header">
+    <div class="top-bar">
+      <select class="ui-lang-select" id="uiLangSelect"><option value="pt">🇧🇷 PT</option><option value="en">🇺🇸 EN</option><option value="es">🇪🇸 ES</option></select>
+      <div class="badge">Versao Comercial Legal</div>
+    </div>
+    <h1 class="logo">LinguaVox</h1>
+    <p class="subtitle">Tradutor de frases curtas - 100% no navegador do usuario</p>
+  </header>
+  <div class="lang-bar">
+    <div class="sel-container" id="fromContainer"><button type="button" class="lang-btn" id="fromBtn"><span class="flag" id="fromFlag">🇧🇷</span><span id="fromName">Português</span></button><div class="dropdown" id="fromDropdown"></div></div>
+    <button type="button" class="swap-btn" id="swapBtn">⇅</button>
+    <div class="sel-container" id="toContainer"><button type="button" class="lang-btn" id="toBtn"><span class="flag" id="toFlag">🇺🇸</span><span id="toName">Inglês</span></button><div class="dropdown" id="toDropdown"></div></div>
+  </div>
+  <div class="audio-settings">
+    <div class="profile-buttons"><button type="button" class="profile-btn active" data-profile="normal"><span>Tom Normal</span></button><button type="button" class="profile-btn" data-profile="grave"><span>Tom Grave</span></button></div>
+    <div class="speed-control"><label>Velocidade</label><input type="range" id="speedSlider" min="0.5" max="1.5" step="0.1" value="1.0"><span id="speedValue">1.0x</span></div>
+    <div class="repeat-control"><label>Repetir</label><select class="repeat-select" id="repeatSelect"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option><option value="5">5x</option><option value="10">10x</option></select></div>
+  </div>
+  <div class="panel"><div class="panel-header"><span class="panel-label label-origem">Origem</span><span class="chip" id="fromChip">Português</span></div><textarea id="srcText" placeholder="Digite ou fale algo..."></textarea><div class="action-grid"><button type="button" class="action-btn" id="micBtn">🎤 Falar</button><button type="button" class="action-btn" id="speakSrcBtn">🔊 Ouvir</button><button type="button" class="action-btn" id="clearBtn">Limpar</button><button type="button" class="action-btn" id="histBtn">Histórico (<span id="histCount">0</span>)</button></div><div class="history-panel" id="historyPanel"><div class="history-list" id="historyList"></div><button type="button" class="clear-hist-btn" id="clearHistBtn">Limpar Histórico</button></div><div class="panel-footer"><span id="srcCount">0 caracteres</span><span>Ctrl+Enter</span></div></div>
+  <div class="panel"><div class="panel-header"><span class="panel-label label-traducao">Tradução</span><span class="chip" id="toChip">Inglês</span></div><textarea id="outText" placeholder="A tradução aparecerá aqui..." readonly></textarea><div class="action-grid action-grid-3"><button type="button" class="action-btn" id="speakOutBtn">🔊 Ouvir</button><button type="button" class="action-btn" id="copyBtn">Copiar</button><button type="button" class="action-btn" id="subBtn">Legenda</button></div><div class="panel-footer"><span id="outCount">0 caracteres</span><span>Legal - MyMemory + Lingva</span></div></div>
+  <button type="button" class="main-btn" id="translateBtn">TRADUZIR AGORA</button>
+  <div class="status-msg" id="statusMsg"></div>
+  <div class="app-footer"><span>LinguaVox Tecnologia - Versao Comercial</span><span class="copyright">copyright Brasil 2026 - 100% navegador</span></div>
+</div>
+<div class="overlay" id="overlay"><div class="overlay-content"><h3>Modo Legenda</h3><small id="ovSrc"></small><p id="ovOut"></p><div class="action-grid"><button type="button" class="action-btn" id="ovClose">Fechar</button><button type="button" class="action-btn" style="background: var(--accent); color: white;" id="ovPlay">Ouvir</button></div></div></div>
+<script>
+  const LANGS = [{c:"pt", n:"Português", f:"🇧🇷"}, {c:"en", n:"Inglês", f:"🇺🇸"}, {c:"es", n:"Espanhol", f:"🇪🇸"}, {c:"fr", n:"Francês", f:"🇫🇷"}, {c:"it", n:"Italiano", f:"🇮🇹"}, {c:"de", n:"Alemão", f:"🇩🇪"}, {c:"ja", n:"Japonês", f:"🇯🇵"}, {c:"ko", n:"Coreano", f:"🇰🇷"}, {c:"zh", n:"Chinês", f:"🇨🇳"}, {c:"ru", n:"Russo", f:"🇷🇺"}, {c:"ar", n:"Árabe", f:"🇸🇦"}, {c:"hi", n:"Hindi", f:"🇮🇳"}];
+  const localeMap = { pt: 'pt-BR', en: 'en-US', es: 'es-ES', fr: 'fr-FR', it: 'it-IT', de: 'de-DE', ja: 'ja-JP', ko: 'ko-KR', zh: 'zh-CN', ru: 'ru-RU', ar: 'ar-SA', hi: 'hi-IN' };
+  const specialLocales = { ar: ['ar-SA'], he: ['he-IL'], no: ['nb-NO'] };
+  let state = { from: "pt", to: "en", history: [], audioProfile: "normal", speed: 1.0, repeatCount: 1 };
+  try { const h=localStorage.getItem("linguavox-h"); if(h) state.history=JSON.parse(h); const f=localStorage.getItem("linguavox-from"); if(f) state.from=f; const t=localStorage.getItem("linguavox-to"); if(t) state.to=t; } catch(e){}
+  const srcText=document.getElementById("srcText"); const outText=document.getElementById("outText"); const translateBtn=document.getElementById("translateBtn"); const statusMsg=document.getElementById("statusMsg"); const srcCount=document.getElementById("srcCount"); const outCount=document.getElementById("outCount");
+  const fromFlag=document.getElementById("fromFlag"); const fromName=document.getElementById("fromName"); const fromChip=document.getElementById("fromChip"); const toFlag=document.getElementById("toFlag"); const toName=document.getElementById("toName"); const toChip=document.getElementById("toChip"); const fromDropdown=document.getElementById("fromDropdown"); const toDropdown=document.getElementById("toDropdown"); const histCount=document.getElementById("histCount"); const micBtn=document.getElementById("micBtn"); const historyPanel=document.getElementById("historyPanel"); const historyList=document.getElementById("historyList"); const speedSlider=document.getElementById("speedSlider"); const speedValue=document.getElementById("speedValue"); const repeatSelect=document.getElementById("repeatSelect");
+  function setStatus(t,e=false){statusMsg.textContent=t; statusMsg.className=`status-msg ${e?'error':''}`;}
+  function updateCounts(){srcCount.textContent=`${srcText.value.length} caracteres`; outCount.textContent=`${outText.value.length} caracteres`;}
+  speedSlider.value=state.speed; speedValue.textContent=state.speed.toFixed(1)+"x"; speedSlider.addEventListener("input",e=>{state.speed=parseFloat(e.target.value); speedValue.textContent=state.speed.toFixed(1)+"x";});
+  repeatSelect.value=state.repeatCount.toString(); repeatSelect.addEventListener("change",e=>{state.repeatCount=parseInt(e.target.value);});
+  document.querySelectorAll(".profile-btn").forEach(btn=>{if(btn.dataset.profile===state.audioProfile) btn.classList.add("active"); btn.onclick=()=>{state.audioProfile=btn.dataset.profile; document.querySelectorAll(".profile-btn").forEach(b=>b.classList.remove("active")); btn.classList.add("active");};});
+  const langBy=c=>LANGS.find(l=>l.c===c)||LANGS[0];
+  function renderDropdowns(){fromDropdown.innerHTML=""; toDropdown.innerHTML=""; LANGS.forEach(l=>{const dF=document.createElement("div"); dF.className=`dropdown-item ${l.c===state.from?'active':''}`; dF.innerHTML=`<span>${l.f}</span> ${l.n}`; dF.onclick=()=>{state.from=l.c; updateLangUI(); fromDropdown.classList.remove("active"); if(srcText.value.trim()) doTranslate();}; fromDropdown.appendChild(dF); const dT=document.createElement("div"); dT.className=`dropdown-item ${l.c===state.to?'active':''}`; dT.innerHTML=`<span>${l.f}</span> ${l.n}`; dT.onclick=()=>{state.to=l.c; updateLangUI(); toDropdown.classList.remove("active"); if(srcText.value.trim()) doTranslate();}; toDropdown.appendChild(dT);});}
+  function updateLangUI(){const lF=langBy(state.from); const lT=langBy(state.to); fromFlag.textContent=lF.f; fromName.textContent=lF.n; fromChip.textContent=lF.n; toFlag.textContent=lT.f; toName.textContent=lT.n; toChip.textContent=lT.n; renderDropdowns(); localStorage.setItem("linguavox-from",state.from); localStorage.setItem("linguavox-to",state.to);}
+  document.getElementById("fromBtn").onclick=e=>{e.stopPropagation(); fromDropdown.classList.toggle("active"); toDropdown.classList.remove("active");}; document.getElementById("toBtn").onclick=e=>{e.stopPropagation(); toDropdown.classList.toggle("active"); fromDropdown.classList.remove("active");}; document.addEventListener("click",e=>{if(!e.target.closest('#fromContainer')&&!e.target.closest('#toContainer')){fromDropdown.classList.remove("active"); toDropdown.classList.remove("active");} if(!e.target.closest('#histBtn')&&!e.target.closest('#historyPanel')){historyPanel.classList.remove("active");}});
+  document.getElementById("swapBtn").onclick=()=>{const tmp=state.from; state.from=state.to; state.to=tmp; const txt=srcText.value; srcText.value=outText.value; outText.value=txt; updateLangUI(); updateCounts(); if(srcText.value.trim()) doTranslate();};
 
+  async function translateMyMemory(text, from, to){
+    const apiFrom=from.split('-')[0]; const apiTo=to.split('-')[0];
+    const url=`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${apiFrom}|${apiTo}`;
+    const res=await fetch(url); if(!res.ok) throw new Error("MyMemory"); const data=await res.json(); if(data.responseData&&data.responseData.translatedText) return data.responseData.translatedText; throw new Error("vazio");
+  }
+  const LINGVA_INSTANCES=["https://lingva.ml/api/v1","https://lingva.garudalinux.org/api/v1","https://translate.plausibility.cloud/api/v1","https://lingva.lunar.icu/api/v1"];
+  async function translateLingva(text, from, to){
+    const apiFrom=from.split('-')[0]; const apiTo=to.split('-')[0];
+    for(const base of LINGVA_INSTANCES){try{const c=new AbortController(); const t=setTimeout(()=>c.abort(),2000); const url=`${base}/${apiFrom}/${apiTo}/${encodeURIComponent(text)}`; const res=await fetch(url,{signal:c.signal}); clearTimeout(t); if(!res.ok) continue; const d=await res.json(); if(d&&d.translation) return d.translation;}catch(e){continue;}}
+    throw new Error("Lingva falhou");
+  }
+  async function robustTranslate(text, from, to){
+    if(!text.trim()) return "";
+    try{return await translateMyMemory(text,from,to);}catch(e){}
+    try{return await translateLingva(text,from,to);}catch(e){}
+    throw new Error("Todos falharam");
+  }
+  let isTranslating=false;
+  async function doTranslate(){const text=srcText.value.trim(); if(!text){outText.value=""; updateCounts(); return;} if(isTranslating) return; isTranslating=true; translateBtn.disabled=true; translateBtn.textContent="TRADUZINDO..."; setStatus("Traduzindo..."); try{const r=await robustTranslate(text,state.from,state.to); outText.value=r; updateCounts(); setStatus("✓ Traduzido"); state.history.unshift({src:text,out:r,at:Date.now()}); if(state.history.length>30) state.history.pop(); localStorage.setItem("linguavox-h",JSON.stringify(state.history)); updateHistoryUI();}catch(e){setStatus("Erro na tradução - tente novamente",true);} finally{isTranslating=false; translateBtn.disabled=false; translateBtn.textContent="TRADUZIR AGORA";}}
+  translateBtn.onclick=doTranslate;
+  srcText.addEventListener("input",()=>{updateCounts(); clearTimeout(window._t); window._t=setTimeout(()=>{if(srcText.value.trim().length>=3) doTranslate();},1200);});
+  document.getElementById("clearBtn").onclick=()=>{srcText.value=""; outText.value=""; updateCounts(); setStatus("");};
+  document.getElementById("copyBtn").onclick=async()=>{if(!outText.value) return; await navigator.clipboard.writeText(outText.value); setStatus("✓ Copiado!"); setTimeout(()=>setStatus(""),2000);};
+
+  let currentPlayId=0; let isSpeaking=false; let repeatTimeout=null;
+  function stopAllAudio(){currentPlayId++; isSpeaking=false; if(repeatTimeout) clearTimeout(repeatTimeout); speechSynthesis.cancel(); setStatus("");}
+  async function speak(text, langCode, repeat=1){
+    if(!text.trim()||repeat<=0) return;
+    if(isSpeaking){stopAllAudio(); return;}
+    stopAllAudio(); isSpeaking=true; const myId=currentPlayId;
+    return new Promise(resolve=>{
+      if(!("speechSynthesis" in window)){setStatus("Voz não suportada",true); isSpeaking=false; return resolve();}
+      const u=new SpeechSynthesisUtterance(text);
+      let finalLang=(specialLocales[langCode]&&specialLocales[langCode][0])||localeMap[langCode]||langCode;
+      u.lang=finalLang;
+      const voices=speechSynthesis.getVoices();
+      let avail=voices.filter(v=>v.lang.toLowerCase().replace('_','-').startsWith(finalLang.split('-')[0].toLowerCase()));
+      const femaleKeywords=['luciana','samantha','monica','paulina','amelie','karen','zira','victoria','maria','female'];
+      const fem=avail.find(v=>femaleKeywords.some(k=>v.name.toLowerCase().includes(k)));
+      if(fem) u.voice=fem; else if(avail.length>0) u.voice=avail[0];
+      u.pitch=state.audioProfile==='grave'?0.8:1.05; u.rate=state.speed;
+      setStatus(`🔊 Reproduzindo...${repeat>1?` (${repeat}x)`:""}`);
+      u.onend=()=>{if(myId!==currentPlayId) return; if(repeat>1){repeatTimeout=setTimeout(()=>{if(myId===currentPlayId){isSpeaking=false; speak(text,langCode,repeat-1);} resolve();},600);} else {isSpeaking=false; setStatus(""); resolve();}};
+      u.onerror=()=>{if(myId!==currentPlayId) return; isSpeaking=false; setStatus("Erro na voz",true); resolve();};
+      speechSynthesis.speak(u);
+    });
+  }
+  document.getElementById("speakSrcBtn").onclick=()=>speak(srcText.value,state.from,parseInt(repeatSelect.value)||1);
+  document.getElementById("speakOutBtn").onclick=()=>speak(outText.value,state.to,parseInt(repeatSelect.value)||1);
+  function updateHistoryUI(){histCount.textContent=state.history.length; historyList.innerHTML=""; if(state.history.length===0){historyList.innerHTML='<div style="text-align:center;color:var(--text-muted);padding:10px;">Sem histórico</div>'; return;} state.history.forEach(item=>{const d=document.createElement("div"); d.className="history-item"; d.innerHTML=`<strong>${item.src}</strong><span>${item.out}</span>`; d.onclick=()=>{srcText.value=item.src; outText.value=item.out; updateCounts(); historyPanel.classList.remove("active");}; historyList.appendChild(d);});}
+  document.getElementById("histBtn").onclick=e=>{e.stopPropagation(); historyPanel.classList.toggle("active");};
+  document.getElementById("clearHistBtn").onclick=()=>{state.history=[]; localStorage.removeItem("linguavox-h"); updateHistoryUI();};
+  const overlay=document.getElementById("overlay"); document.getElementById("subBtn").onclick=()=>{if(!outText.value) return; document.getElementById("ovSrc").textContent=srcText.value; document.getElementById("ovOut").textContent=outText.value; overlay.classList.add("active");}; document.getElementById("ovClose").onclick=()=>overlay.classList.remove("active"); document.getElementById("ovPlay").onclick=()=>speak(outText.value,state.to,parseInt(repeatSelect.value)||1); overlay.onclick=e=>{if(e.target===overlay) overlay.classList.remove("active");};
+  const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition; let recognition=null; let isListening=false;
+  if(SpeechRecognition){recognition=new SpeechRecognition(); recognition.continuous=false; recognition.interimResults=false; recognition.onstart=()=>{isListening=true; micBtn.classList.add("listening"); setStatus("Ouvindo...");}; recognition.onresult=e=>{srcText.value=e.results[0][0].transcript; updateCounts(); doTranslate();}; recognition.onerror=e=>{isListening=false; micBtn.classList.remove("listening"); setStatus("Erro no microfone",true); setTimeout(()=>setStatus(""),2000);}; recognition.onend=()=>{isListening=false; micBtn.classList.remove("listening");};}
+  micBtn.onclick=()=>{if(!recognition){setStatus("Voz não suportada",true); return;} if(isListening){recognition.stop();} else {let rl=(specialLocales[state.from]&&specialLocales[state.from][0])||localeMap[state.from]||state.from; recognition.lang=rl; try{recognition.start();}catch(e){recognition.stop();}}};
+  function init(){updateLangUI(); updateHistoryUI(); updateCounts(); if("speechSynthesis" in window){speechSynthesis.getVoices(); setTimeout(()=>speechSynthesis.getVoices(),500);}} init();
+</script>
+<script>(function(){var loc=location.href.replace(/#.*$/,"");var ATTR_NAMES=["data-product-id","data-productid","data-product_id","product-id","productid","product_id","data-source-entity-id","source-entity-id","source_entity_id","data-product","data-metadata","data-meta"];var DATASET_KEYS=["productId","productid","product_id","sourceEntityId","sourceentityid","source_entity_id","product","metadata","meta"];function readProductId(value){if(typeof value!=="string"||value.length===0)return null;if(/^[0-9]{6,}$/.test(value))return value;var match=value.match(/(?:product(?:_|-)?id|source(?:_|-)?entity(?:_|-)?id)["'=:\s]+([0-9]{6,})/i);return match?match[1]:null}function extractProductId(start){for(var node=start;node&&node!==document.body;node=node.parentElement){for(var i=0;i<ATTR_NAMES.length;i++){var attrValue=node.getAttribute&&node.getAttribute(ATTR_NAMES[i]);var attrProductId=readProductId(attrValue);if(attrProductId)return attrProductId}var dataset=node.dataset||null;if(dataset){for(var j=0;j<DATASET_KEYS.length;j++){var dataValue=dataset[DATASET_KEYS[j]];var dataProductId=readProductId(dataValue);if(dataProductId)return dataProductId}}}return null}function isInlineMediaSlotElement(node){return !!(node&&node.getAttribute&&node.getAttribute("data-clippy-inline-media-slot")!==null)}function findInlineMediaSlot(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(isInlineMediaSlotElement(node))return node}return null}function readInlineMediaUrl(node){if(!node)return null;return node.getAttribute&&((node.getAttribute("data-clippy-inline-media-url")||node.getAttribute("data-url")||node.getAttribute("data_url")))||node.href||null}function stripHash(url){return String(url).replace(/#.*$/,"")}function urlsMatch(a,b){if(!a||!b)return false;try{return stripHash(new URL(a,loc).href)===stripHash(new URL(b,loc).href)}catch(_){return stripHash(a)===stripHash(b)}}function isFirstPartyReelUrl(value){try{var url=new URL(value,loc);if(url.protocol!=="https:")return false;var host=url.hostname.toLowerCase();var supported=host==="instagram.com"||host.endsWith(".instagram.com")||host==="facebook.com"||host.endsWith(".facebook.com");return supported&&/\/reels?\//i.test(url.pathname)}catch(_){return false}}function isInlineMediaUrlClick(node,href){var slot=findInlineMediaSlot(node);if(!slot)return false;var slotUrl=readInlineMediaUrl(slot);if(slotUrl)return urlsMatch(href,slotUrl);return isFirstPartyReelUrl(href)}function findDataHref(start){for(var node=start;node&&node!==document.body;node=node.parentElement){if(node.getAttribute){var href=node.getAttribute("data-href")||node.getAttribute("data-url");if(href)return{href:href,node:node}}}return null}var nativeOpen=window.open;window.open=function(url){if(parent!==window&&typeof url==="string"&&/^https?:\/\//.test(url)){parent.postMessage({type:"ecto:usercontent-link-click",href:url},"*");return null}return nativeOpen?nativeOpen.apply(window,arguments):null};document.addEventListener("click",function(e){var target=e.target instanceof Element?e.target:null;if(!target)return;if(parent===window)return;var a=target.closest?target.closest("a[href]"):null;if(a&&a.href&&/^https?:\/\//.test(a.href)&&a.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(a,a.href))return;var productId=extractProductId(target)||extractProductId(a);if(productId){e.preventDefault();parent.postMessage({type:"ecto-artifact-link-click",productId:productId},"*");return}e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:a.href},"*");return}var dataHref=findDataHref(target);if(dataHref&&/^https?:\/\//.test(dataHref.href)&&dataHref.href.replace(/#.*$/,"")!==loc){if(isInlineMediaUrlClick(dataHref.node,dataHref.href))return;e.preventDefault();parent.postMessage({type:"ecto:usercontent-link-click",href:dataHref.href},"*")}},true)})();</script><script>(function(){var FOCUS_TYPE="ecto:artifact-focus-request";var CLOSE_TYPE="ecto:artifact-close-request";function focusArtifactDocument(){var body=document.body;if(!body)return;try{window.focus();}catch(e){}if(!body.hasAttribute("tabindex"))body.setAttribute("tabindex","-1");try{body.focus({preventScroll:true});}catch(e){try{body.focus();}catch(e2){}}}window.addEventListener("message",function(event){if(event.source!==window.parent)return;var data=event.data;if(!data||typeof data!=="object"||data.type!==FOCUS_TYPE)return;if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",focusArtifactDocument,{once:true});return;}focusArtifactDocument();});window.addEventListener("keydown",function(event){if(event.key!=="Escape")return;window.setTimeout(function(){if(event.defaultPrevented)return;window.parent.postMessage({type:CLOSE_TYPE},"*");},0);});})();</script></body>
+</html>
